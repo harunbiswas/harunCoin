@@ -1,0 +1,17 @@
+{
+  "name": "harunCoin",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon index",
+    "test": "jest --watchAll"
+  },
+  "devDependencies": {
+    "jest": "^29.0.1",
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1"
+  }
+}
