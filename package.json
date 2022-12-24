@@ -12,6 +12,7 @@
     "nodemon": "^2.0.19"
   },
   "dependencies": {
-    "crypto": "^1.0.1"
+    "crypto": "^1.0.1",
+    "hex-to-binary": "^1.0.1"
   }
 }
