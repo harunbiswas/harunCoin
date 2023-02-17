@@ -51,7 +51,33 @@ class PubSub {
 
   // publish function
   publish({ channel, message }) {
-    this.pubnub.publish({ channel, message }, () => {});
+    this.pubnub.unsubscribe(
+      {
+        channels: [channel],
+        withPresence: true,
+      },
+      (status) => {
+        if (status.error) {
+          console.log(status.error);
+        } else {
+          this.pubnub.publish(
+            {
+              channel: channel,
+              message: message,
+            },
+            (status, res) => {
+              if (status.error) {
+                console.log(status.error);
+              } else {
+                this.pubnub.subscribe({
+                  channels: [channel],
+                });
+              }
+            }
+          );
+        }
+      }
+    );
   }
 
   // broadcust chain function

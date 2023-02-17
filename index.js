@@ -5,6 +5,7 @@ const PubSub = require("./app/pubsub");
 const request = require("request");
 const TransactionPool = require("./wallet/transaction-pool");
 const Wallet = require("./wallet");
+const TransactionMiner = require("./app/transaction-miner");
 const Transaction = require("./wallet/transaction");
 
 //declered the app
@@ -13,6 +14,12 @@ const blockchain = new Blockchain();
 const transactionPool = new TransactionPool();
 const wallet = new Wallet();
 const pubsub = new PubSub({ blockchain, transactionPool });
+const transactionMiner = new TransactionMiner({
+  blockchain,
+  transactionPool,
+  wallet,
+  pubsub,
+});
 
 const DEFAULT_PORT = 3000;
 const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
@@ -35,8 +42,7 @@ app.post("/api/mine", (req, res) => {
 app.post("/api/transact", (req, res) => {
   const { amount, recipient } = req.body;
 
-  let transaction;
-  transaction = transactionPool.existingTransaction({
+  let transaction = transactionPool.existingTransaction({
     inputAddress: wallet.publicKey,
   });
 
@@ -61,6 +67,11 @@ app.get("/api/transaction-pool-map", (req, res) => {
   res.json(transactionPool.transactionMap);
 });
 
+app.get("/api/mine-transactions", (req, res) => {
+  transactionMiner.mineTransactions();
+  res.redirect("/api/blocks");
+});
+
 const syncWithRootState = () => {
   request({ url: `${ROOT_NODE_ADDRESS}/api/blocks` }, (err, res, body) => {
     if (!err && res.statusCode === 200) {
@@ -75,13 +86,13 @@ const syncWithRootState = () => {
     { url: `${ROOT_NODE_ADDRESS}/api/transaction-pool-map` },
     (err, res, body) => {
       if (!err && res.statusCode === 200) {
-        const rootTransactionMap = JSON.parse(body);
+        const rootTransactionPoolMap = JSON.parse(body);
 
         console.log(
           `replace transaction pool map on a sync with`,
-          rootTransactionMap
+          rootTransactionPoolMap
         );
-        transactionPool.setMap(rootTransactionMap);
+        transactionPool.setMap(rootTransactionPoolMap);
       }
     }
   );
