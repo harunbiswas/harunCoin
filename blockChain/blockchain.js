@@ -30,7 +30,6 @@ class Blockchain {
 
   //   validatidatin chain function
   static isValidChain(chain) {
-    console.log("reqlacing chain with", chain);
     if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis())) {
       return false;
     }
