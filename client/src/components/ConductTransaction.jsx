@@ -1,15 +1,32 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { FormControl, FormGroup } from "react-bootstrap";
+import { Button, FormControl, FormGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import values from "../values";
 
 export default function ConductTransaction() {
-  const [data, setData] = useState({
-    recipient: "",
-    amount: 0,
-  });
+  const [recipient, setRecipient] = useState("");
+  const [amount, setAmount] = useState();
 
-  const handler = (e) => {
-    setData({ [e.target.name]: e.target.value });
+  const recipientHandler = (e) => {
+    setRecipient(e.target.value);
+  };
+  const amountHandler = (e) => {
+    setAmount(e.target.value);
+  };
+  const conductTransaction = () => {
+    const data = {
+      recipient,
+      amount,
+    };
+    axios
+      .post(`${values.url}/transact`, data)
+      .then((d) => {
+        alert(d.data.message || d.data.type);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   return (
@@ -22,9 +39,9 @@ export default function ConductTransaction() {
         <FormControl
           input="text"
           placeholder="recipient"
-          value={data.recipient}
+          value={recipient}
           name="recipient"
-          onChange={(e) => handler(e)}
+          onChange={(e) => recipientHandler(e)}
         />
       </FormGroup>
       <br />
@@ -32,11 +49,15 @@ export default function ConductTransaction() {
         <FormControl
           input="number"
           placeholder="amount"
-          value={data.amount}
+          value={amount}
           name="amount"
-          onChange={(e) => handler(e)}
+          onChange={(e) => amountHandler(e)}
         />
       </FormGroup>
+      <br />
+      <div className="" bsStyle="primary" onClick={conductTransaction}>
+        <Button>Submit</Button>
+      </div>
     </div>
   );
 }
