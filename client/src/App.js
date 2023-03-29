@@ -29,6 +29,7 @@ const App = () => {
       <br />
       <Link to="/blocks">Blocks</Link>
       <Link to="/conduct-transaction">Conduct a Transaction</Link>
+      <Link to="/transaction-pool">Transaction Pool</Link>
       <br />
       <h1>Welcome to Haruncoin!</h1>
       <br />

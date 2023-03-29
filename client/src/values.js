@@ -1,5 +1,5 @@
 const values = {
-  url: "http://localhost:3000/api",
+  url: `${document.location.origin}/api`,
 };
 
 export default values;

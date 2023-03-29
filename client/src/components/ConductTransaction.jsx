@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Button, FormControl, FormGroup } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import values from "../values";
 
 export default function ConductTransaction() {
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState();
+  const navigate = useNavigate();
 
   const recipientHandler = (e) => {
     setRecipient(e.target.value);
@@ -22,7 +23,10 @@ export default function ConductTransaction() {
     axios
       .post(`${values.url}/transact`, data)
       .then((d) => {
+        setRecipient("");
+        setAmount("");
         alert(d.data.message || d.data.type);
+        navigate("/transaction-pool");
       })
       .catch((e) => {
         console.log(e);
